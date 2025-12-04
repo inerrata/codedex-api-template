@@ -8,7 +8,7 @@ function App() {
 
   const [searchInput, setSearchInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
-  const [albums, setAlbums] = useState("");
+  const [albums, setAlbums] = useState([]);
   const numbers = [1,2,3,4,5];
   const doubledNumbers = numbers.map((num) => num * 2)
 useEffect (() => {
@@ -44,6 +44,12 @@ async function search() {
     "https://api.spotify.com/v1/search?q=" + searchInput + "&type=artist",
     artistParams
   )
+    .then((result) => result.json())
+    .then((data) => {
+      return data.artists.items[0].id
+    });
+  
+  // Get Artist Albums
   await fetch (
     "https://api.spotify.com/v1/artists/" +
     artistID +
@@ -52,8 +58,9 @@ async function search() {
   )
   .then((result) => result.json())
   .then((data) => {
-    return data.artists.items[0].id;  
+    setAlbums(data.items);  
   });
+
 }
 
    return (
